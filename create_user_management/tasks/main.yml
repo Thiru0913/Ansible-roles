@@ -1,0 +1,38 @@
+---
+- name: Create User and Configure SSH Access
+  hosts: your_target_servers
+  become: yes
+
+  tasks:
+    - name: Create a user if it doesn't exist
+      user:
+        name: "{{ create_user }}"
+        password: "{{ create_user_password }}"
+        state: present
+      when: not (create_user in ansible_facts.users)
+      tags:
+        - create_user
+
+    - name: Update the user's password
+      user:
+        name: "{{ create_user }}"
+        password: "{{ create_user_password }}"
+      when: create_user in ansible_facts.users
+      tags:
+        - update_password
+
+    - name: Provide sudo permissions to the user
+      lineinfile:
+        path: /etc/sudoers
+        line: '{{ create_user }} ALL=(ALL:ALL) ALL'
+      when: create_user in ansible_facts.users
+      tags:
+        - sudo_permissions
+
+    - name: Copy SSH public key to the user's home directory
+      authorized_key:
+        user: "{{ create_user }}"
+        key: "{{ ssh_public_key }}"
+      when: create_user in ansible_facts.users
+      tags:
+        - copy_ssh_key
