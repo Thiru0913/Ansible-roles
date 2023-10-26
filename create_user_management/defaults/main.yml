@@ -2,4 +2,3 @@
 create_user: vamsi
 create_user_password: India@12
 ssh_public_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCXql+3oS+fIAB7T6phGhXJTLrLJUgzIEcb6xdPulCpE/vIRDAqpjuIbCPaqzbURjxNNZEpzGQgvZy6x4sMx6d/Vf/zVh9Yw6lQ/Q8ngYOpxv5YmM0oBGOWiCCeTz9uj52mFa90qylr8N3zAykW+URXNCh49VyYFjFTJ4VVAcqDlqFy76TxOfgW0qyRMyrxTxankyypfL9hbBjv27wH31JHxbaFDuoVu9joPlirqMUkUd0ZIj7OIbmP/ZMycnfQpD3moL/85y9cWz6VLraQ34BMYJxBOWY7HEys6AlWavZgzDux5ug/tlwIcZDlWmC8aJ8BboNQT0s8QoVRvk8RRdM0jLWngDua1PlzgUebXpq2zGOKxq84vOwoZgaKbOM/W/AK25enEEgUlpS7ajt89znFBa/1wpDLEL15rcv0dFqgDWxeBf9LTJPve5mylx9vdn5C6adBsHvkl4K1M1EVCznu9/Yan9d4EWvqX/JsTYXBMmaWkVGzrBaJvEkrx19FqAk= root@jenkins
-user_exists: "{{ create_user in lookup('pipe', 'cat /etc/passwd | cut -d: -f1') }}"
