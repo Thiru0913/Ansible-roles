@@ -1,23 +1,20 @@
 ---
-- name: Create User and Configure SSH Access
-  hosts: your_target_servers
-  become: yes
-
-  tasks:
     - name: Create a user if it doesn't exist
       user:
         name: "{{ create_user }}"
-        password: "{{ create_user_password }}"
+        shell: /bin/bash
+        password: "{{ create_user_password | password_hash('sha512') }}"
         state: present
-      when: not (create_user in ansible_facts.users)
+      when: not user_exists
       tags:
         - create_user
 
     - name: Update the user's password
       user:
         name: "{{ create_user }}"
-        password: "{{ create_user_password }}"
-      when: create_user in ansible_facts.users
+        update_password: always
+        password: "{{ create_user_password | password_hash('sha512') }}"
+      when: not user_exists
       tags:
         - update_password
 
@@ -25,7 +22,7 @@
       lineinfile:
         path: /etc/sudoers
         line: '{{ create_user }} ALL=(ALL:ALL) ALL'
-      when: create_user in ansible_facts.users
+      when: not user_exists
       tags:
         - sudo_permissions
 
@@ -33,6 +30,6 @@
       authorized_key:
         user: "{{ create_user }}"
         key: "{{ ssh_public_key }}"
-      when: create_user in ansible_facts.users
+      when: not user_exists
       tags:
         - copy_ssh_key
